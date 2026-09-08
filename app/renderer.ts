@@ -6,6 +6,7 @@ const letters:Record<string,number[]>={A:[14,17,17,31,17,17,17],B:[30,17,17,30,1
 const palette=['#50dcec','#7384f5','#f7a94e','#eedb51','#73dc85','#bf7dea','#ee737b'];
 export function timeParts(date:Date,o:Options){const parts=new Intl.DateTimeFormat('en-GB',{timeZone:o.zone==='local'?undefined:o.zone,hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(date);let h=Number(parts.find(p=>p.type==='hour')!.value);const m=parts.find(p=>p.type==='minute')!.value;const pm=h>=12;if(!o.hour24)h=h%12||12;return {text:String(h).padStart(2,'0')+':'+m,pm};}
 export function renderClock(canvas:HTMLCanvasElement,o:Options,t:number,date:Date){
+ t=Number.isFinite(t)?Math.max(0,t):0;
  const c=canvas.getContext('2d');if(!c)return;const S=canvas.width/128;c.fillStyle='#030608';c.fillRect(0,0,canvas.width,canvas.height);
  const rect=(x:number,y:number,w:number,h:number,color:string)=>{c.fillStyle=color;c.fillRect(Math.round(x)*S,Math.round(y)*S,w*S,h*S)};
  const pix=(x:number,y:number,color:string)=>{c.fillStyle=color;c.fillRect(Math.round(x)*S+.9,Math.round(y)*S+.9,S-1.8,S-1.8)};

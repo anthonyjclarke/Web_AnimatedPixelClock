@@ -4,7 +4,7 @@ Browser adaptation of AnimatedPixelClock's 128 × 64 RGB matrix. Includes 13 sty
 
 ## Running
 
-Install with `pnpm install`, then use `pnpm dev`. Build with `pnpm build`. The static export is generated in `out/`.
+Install with `pnpm install`, then use `pnpm dev`. Build with `pnpm build`. The static export is generated in `dist/client/`.
 
 ## Adaptation scope
 
@@ -12,7 +12,7 @@ The original Tetris/Pac-Man 5 × 7 numeral patterns are retained. Arcade scenes 
 
 ## Validation
 
-TypeScript checks and production export pass. Renderer checks cover all 13 styles at six animation times and both sides of midnight; time checks cover 12/24-hour format and Sydney daylight saving. No browser interaction testing was requested. Optional WebMCP style selection is feature-detected; no supported WebMCP validation context was available.
+TypeScript checks and production export pass. Renderer checks cover all 13 styles at eight animation times and both sides of midnight; time checks cover 12/24-hour format and Sydney daylight saving. No browser interaction testing was requested. Optional WebMCP style selection is feature-detected; no supported WebMCP validation context was available.
 
 ## Attribution
 
