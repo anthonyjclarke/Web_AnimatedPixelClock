@@ -1,3 +1,7 @@
+import {Tetris, rotations, digitX, pieceColors} from './tetris';
+const tetrisStates = new WeakMap<HTMLCanvasElement, {game:Tetris;last:number;accumulator:number;key:string}>();
+const tetrisReplays = new WeakSet<HTMLCanvasElement>();
+export function resetTetris(canvas:HTMLCanvasElement,replay=false){tetrisStates.delete(canvas);if(replay)tetrisReplays.add(canvas);else tetrisReplays.delete(canvas);}
 export const styles=['Tetris','Mario','Pac-Man','Snake','Space Invaders','Asteroids','Dino Runner','Matrix Rain','TRON','Bomberman','Pong','Standard','Large'];
 export type Options={style:string;brightness:number;hour24:boolean;date:boolean;blink:boolean;glow:boolean;zone:string;color:string;motion:boolean};
 // Numerals from the original Tetris / Pac-Man 5 × 7 block font.
@@ -18,12 +22,25 @@ export function renderClock(canvas:HTMLCanvasElement,o:Options,t:number,date:Dat
  const style=o.style, tt=timeParts(date,o), sec=date.getSeconds()+date.getMilliseconds()/1000;
  if(style==='Matrix Rain'){for(let x=0;x<128;x+=4){const head=(t*(9+x%7)+x*2)%82;for(let y=0;y<22;y++){const yy=Math.floor(head-y);if(yy>=0&&yy<64){const strength=1-y/23;pix(x,yy,`rgb(0,${Math.round(strength*100)},${Math.round(strength*45)})`);if(y%3===0)pix(x+1,yy,'#0c381d')}}}}
  if(style==='Space Invaders'||style==='Asteroids'){for(let i=0;i<34;i++)pix((i*37+Math.floor(t*(i%3+1)))%128,(i*17)%64,i%4===0?'#657b94':'#243448')}
+ if(style==='Tetris'){
+   const key=o.zone+o.hour24;let state=tetrisStates.get(canvas);
+   if(!state||state.key!==key||t<state.last){state={game:new Tetris(),last:t,accumulator:0,key};tetrisStates.set(canvas,state);state.game.sync(tt.text,tt.text,Math.floor(date.getTime()/60000),sec,digits,tetrisReplays.delete(canvas));}
+   const game=state.game;
+   game.sync(tt.text,timeParts(new Date(date.getTime()+60000),o).text,Math.floor(date.getTime()/60000),sec,digits);
+   state.accumulator+=o.motion?Math.min(.1,Math.max(0,t-state.last))*1000:0;state.last=t;
+   while(state.accumulator>=16){game.tick();game.tickDigits(digits);state.accumulator-=16;}
+   game.displayed.split('').forEach((ch,i)=>{if(i===2){if(!o.blink||sec%1<.5){block(61,28,2,2,o.color);block(61,34,2,2,o.color);}return;}if(game.queue[0]?.index===i)return;digits[Number(ch)].forEach((row,y)=>{for(let x=0;x<5;x++)if(row&(1<<(4-x)))block(digitX[i]+x*3,22+y*3+game.offsets[i],2,2,o.color);});});
+   for(const dot of game.dots)if(game.frame>=dot.delay)block(dot.x,dot.y,2,2,o.color);
+   game.board.forEach((row,y)=>{if(game.clearRows.includes(y)&&Math.floor(game.flash/5)%2===0)return;row.forEach((piece,x)=>{if(piece>=0)block(x*4,44+y*4,3,3,pieceColors[piece]);});});
+   if(game.phase==='moving')for(const [x,y] of rotations[game.drawRotation].cells){const cx=Math.floor(game.column+.5)+x,py=Math.floor(game.y+.5)+y*4;if(cx>=0&&cx<32&&py>=0&&py<64)block(cx*4,py,3,3,pieceColors[game.piece]);}
+   if(!o.hour24)text(tt.pm?'PM':'AM',110,4,o.color);
+   return;
+ }
  if(o.date){const d=new Intl.DateTimeFormat('en-GB',{timeZone:o.zone==='local'?undefined:o.zone,weekday:'short',day:'2-digit',month:'short'}).format(date).replaceAll(',','').toUpperCase();text(d,Math.floor((128-d.length*6)/2),5,'#72958f')}
  if(!o.hour24)text(tt.pm?'PM':'AM',113,18,'#7e9a96');
  const pitch=style==='Large'?4:3, w=5*pitch, gap=style==='Large'?5:6,total=w*4+pitch+gap*4,x0=Math.floor((128-total)/2),y0=style==='Large'?22:24;
- [...tt.text].forEach((ch,i)=>{let x=x0+i*(w+gap);if(i>2)x-=w-pitch;if(ch===':'){if(!o.blink||sec%1<.5){block(x,y0+pitch,pitch,pitch,o.color);block(x,y0+pitch*5,pitch,pitch,o.color)}return}const rows=digits[Number(ch)];rows.forEach((r,y)=>{for(let xx=0;xx<5;xx++){if(!(r&(1<<(4-xx))))continue;let dy=y0+y*pitch;const transition=Math.min(t,sec);if(style==='Tetris')dy-=Math.max(0,1-(transition-i*.17-y*.025))*50;else if(style==='Mario')dy-=Math.max(0,Math.sin(Math.min(1,transition/1.5)*Math.PI))*((i+1)*2);else if(style==='Matrix Rain'&&transition<1&&((xx+y)%4)>transition*4)continue;else if(style==='Bomberman'&&transition<.6&&((xx+y)%3)===0)continue;const col=style==='Tetris'?palette[[0,2,4,5,6][i]]:o.color;block(x+xx*pitch,dy,style==='Pac-Man'?1:pitch-(style==='Tetris'||style==='Bomberman'?1:0),style==='Pac-Man'?1:pitch-(style==='Tetris'||style==='Bomberman'?1:0),col)}})});
+ [...tt.text].forEach((ch,i)=>{let x=x0+i*(w+gap);if(i>2)x-=w-pitch;if(ch===':'){if(!o.blink||sec%1<.5){block(x,y0+pitch,pitch,pitch,o.color);block(x,y0+pitch*5,pitch,pitch,o.color)}return}const rows=digits[Number(ch)];rows.forEach((r,y)=>{for(let xx=0;xx<5;xx++){if(!(r&(1<<(4-xx))))continue;let dy=y0+y*pitch;const transition=Math.min(t,sec);if(style==='Mario')dy-=Math.max(0,Math.sin(Math.min(1,transition/1.5)*Math.PI))*((i+1)*2);else if(style==='Matrix Rain'&&transition<1&&((xx+y)%4)>transition*4)continue;else if(style==='Bomberman'&&transition<.6&&((xx+y)%3)===0)continue;const col=o.color;block(x+xx*pitch,dy,style==='Pac-Man'?1:pitch-(style==='Bomberman'?1:0),style==='Pac-Man'?1:pitch-(style==='Bomberman'?1:0),col)}})});
  const x=(t*13)%150-11,ground=59;
- if(style==='Tetris'){const pieces=[[[0,0],[1,0],[2,0],[1,1]],[[0,0],[1,0],[0,1],[1,1]],[[0,0],[0,1],[1,1],[2,1]],[[0,0],[1,0],[2,0],[3,0]]];for(let i=0;i<32;i++){const height=(i*7+3)%4;for(let y=0;y<height;y++)block(i*4,61-y*3,3,2,palette[(i+Math.floor(i/5))%7])}const p=Math.floor(t/3);pieces[p%4].forEach(([xx,yy])=>block(5+(p*19)%110+xx*3,14+(t%3)/3*38+yy*3,2,2,palette[p%7]))}
  if(style==='Mario'){for(let i=0;i<128;i+=5){block(i,61,4,2,'#aa693d');pix(i,60,'#eaa36c')}const jump=Math.max(0,Math.sin(t*2))*7;sprite(['   11111','  1111111','  333233',' 33332333','   33333','  11111',' 11111111','331111133','  11111','  11 11',' 111 111'],x,ground-10-jump,'#f27655');sprite(['  111',' 11111','1112111','1111111',' 11 11'],(135-t*7)%145,54,'#b8844f')}
  if(style==='Pac-Man'){for(let i=0;i<128;i+=6)pix(i,55,'#edcb8b');const cx=(t*19)%160-12;c.fillStyle='#f8dc4b';c.beginPath();const mouth=.15+Math.abs(Math.sin(t*9))*.6;c.moveTo((cx+5)*S,55*S);c.arc((cx+5)*S,55*S,5*S,mouth,Math.PI*2-mouth);c.closePath();c.fill();sprite([' 11111 ','1111111','1221221','1221221','1111111','1111111','11 1 11'],cx-17,51,'#ed7283');sprite([' 11111 ','1111111','1221221','1221221','1111111','1111111','11 1 11'],cx-29,51,'#79dbea')}
  if(style==='Snake'){for(let i=0;i<24;i++){const sx=(t*18-i*2+256)%128;block(sx,54+Math.round(Math.sin(sx/13)*4),2,2,i===0?'#d6ffe3':'#55ce83')}block(110,53,2,2,'#fa6f66')}

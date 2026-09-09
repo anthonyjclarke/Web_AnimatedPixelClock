@@ -5,16 +5,18 @@ import {Switch} from '@/components/ui/switch';
 import {Slider} from '@/components/ui/slider';
 import {Select,SelectTrigger,SelectValue,SelectContent,SelectItem} from '@/components/ui/select';
 import {Maximize,Play,Pause,RotateCcw,ChevronRight,Sun,Grid2X2} from 'lucide-react';
-import {renderClock,styles,type Options} from './renderer';
+import {renderClock,resetTetris,styles,type Options} from './renderer';
 const defaults:Options={style:'Tetris',brightness:85,hour24:true,date:true,blink:true,glow:true,zone:'local',color:'#64e6ac',motion:true};
 export default function Home(){
  const [o,setO]=useState(defaults),[ready,setReady]=useState(false),[cycle,setCycle]=useState(false),[replay,setReplay]=useState(0),[now,setNow]=useState(new Date(0)),[error,setError]=useState('');
  const canvas=useRef<HTMLCanvasElement>(null), panel=useRef<HTMLDivElement>(null);
+ const animationTime=useRef(0),previousReplay=useRef(0);
+ useEffect(()=>{animationTime.current=0;if(canvas.current)resetTetris(canvas.current,replay!==previousReplay.current);previousReplay.current=replay},[o.style,replay]);
  const update=(patch:Partial<Options>)=>setO(v=>({...v,...patch}));
  useEffect(()=>{try{const saved=JSON.parse(localStorage.getItem('pixel-clock')||'null');if(saved&&styles.includes(saved.style)){new Intl.DateTimeFormat('en',{timeZone:saved.zone==='local'?undefined:saved.zone});setO({...defaults,...saved});}}catch{}setReady(true);setNow(new Date());const t=setInterval(()=>setNow(new Date()),1000);return()=>clearInterval(t)},[]);
  useEffect(()=>{if(ready)try{localStorage.setItem('pixel-clock',JSON.stringify(o))}catch{}},[o,ready]);
  useEffect(()=>{if(!cycle)return;const t=setInterval(()=>setO(v=>({...v,style:styles[(styles.indexOf(v.style)+1)%styles.length]})),20000);return()=>clearInterval(t)},[cycle]);
- useEffect(()=>{if(!canvas.current)return;let frame=0;const start=performance.now();const draw=(t:number)=>{renderClock(canvas.current!,o,o.motion?(t-start)/1000:10,new Date());frame=requestAnimationFrame(draw)};frame=requestAnimationFrame(draw);return()=>cancelAnimationFrame(frame)},[o,replay]);
+ useEffect(()=>{if(!canvas.current)return;let frame=0;let previous=performance.now();const draw=(t:number)=>{const elapsed=t-previous;previous=t;if(o.motion)animationTime.current+=elapsed/1000;renderClock(canvas.current!,o,animationTime.current,new Date());frame=requestAnimationFrame(draw)};frame=requestAnimationFrame(draw);return()=>cancelAnimationFrame(frame)},[o,replay]);
  useEffect(()=>{
  const ctx=(document as Document & {modelContext?:{registerTool:(tool:unknown,options:{signal:AbortSignal})=>void|Promise<void>}}).modelContext;
  if(!ctx?.registerTool)return;
