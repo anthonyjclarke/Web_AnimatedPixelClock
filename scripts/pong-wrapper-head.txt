@@ -1,0 +1,18 @@
+// Numerical helpers ported from AnimatedPixelClock clock_pong.cpp (MIT).
+// Regenerate with scripts/port-pong.py; wrapper templates are in scripts/.
+import {classicDate,drawGfxText} from './classic-clocks';
+import type {Framebuffer} from './framebuffer';
+export const pongDefaults={pongBallSpeed:18,pongBounceStrength:3,pongBounceDamping:85,pongPaddleWidth:20,pongHorizontalBounce:true,pongDigitShatter:true};
+export type PongSettings=typeof pongDefaults;
+export const pongRanges={pongBallSpeed:[16,30,1],pongBounceStrength:[1,8,1],pongBounceDamping:[50,95,5],pongPaddleWidth:[10,40,2]} as const;
+export function normalizePong(value:unknown):PongSettings{const out={...pongDefaults},v=value&&typeof value==='object'?value as Record<string,unknown>:{};for(const key of Object.keys(pongRanges) as (keyof typeof pongRanges)[]){const n=v[key];if(typeof n==='number'&&Number.isFinite(n)){const [lo,hi,step]=pongRanges[key];out[key]=Math.max(lo,Math.min(hi,lo+Math.round((n-lo)/step)*step));}}for(const key of ['pongHorizontalBounce','pongDigitShatter'] as const)if(typeof v[key]==='boolean')out[key]=v[key];return out;}
+type Fragment={x:number;y:number;vx:number;vy:number;active:boolean};
+export function createPong(rng:()=>number=Math.random,initial?:PongSettings){
+let settings=normalizePong(initial),now=0,displayed='00:00',initialized=false,lastPhysicsUpdate=0;
+const millis=()=>now,random=(a:number,b:number)=>a+Math.floor(rng()*(b-a)),tickSpeed=()=>Math.trunc((settings.pongBallSpeed*4+2)/5);
+const MAX_PONG_FRAGMENTS=40,MAX_PONG_BALLS=2,PONG_BALL_SIZE=2,PONG_TIME_Y=16,PONG_PLAY_AREA_TOP=10,BREAKOUT_PADDLE_Y=60,BALL_SPAWN_DELAY=500,PONG_FRAG_GRAVITY=.19,PONG_FRAG_SPEED=1.2,BALL_HIT_THRESHOLD=3,DIGIT_TRANSITION_TIMEOUT=3000,DIGIT_ASSEMBLY_DURATION=800,PADDLE_WRONG_DIRECTION_CHANCE=0,PADDLE_STICK_MIN_DELAY=0,PADDLE_STICK_MAX_DELAY=300,PADDLE_MOMENTUM_MULTIPLIER=2,BALL_RELEASE_RANDOM_VARIATION=2,BALL_COLLISION_ANGLE_VARIATION=3,SCREEN_WIDTH=128,SCREEN_HEIGHT=64,PI=Math.PI;
+const PONG_BALL_NORMAL=0,PONG_BALL_SPAWNING=1,DIGIT_NORMAL=0,DIGIT_BREAKING=1,DIGIT_ASSEMBLING=2;
+const DIGIT_X=[19,37,55,73,91],FRAGMENT_SPAWN_PERCENT=[.25,.5,.25];
+const pongDigitGlyph=[[14,17,17,17,17,17,14],[4,12,4,4,4,4,14],[14,17,1,2,4,8,31],[14,17,1,6,1,17,14],[2,6,10,18,31,2,2],[31,16,30,1,1,17,14],[6,8,16,22,17,17,14],[31,1,2,4,8,8,8],[14,17,17,14,17,17,14],[14,17,17,15,1,2,12]];
+const pong_balls=Array.from({length:2},()=>({x:0,y:0,vx:0,vy:0,state:0,spawn_timer:0,active:false,inside_digit:-1})),pong_fragments:Fragment[]=Array.from({length:40},()=>({x:0,y:0,vx:0,vy:0,active:false})),fragment_targets=Array.from({length:40},()=>({target_digit:-1,target_x:0,target_y:0})),digit_transitions=Array.from({length:5},()=>({state:0,old_char:48,new_char:48,state_timer:0,hit_count:0,fragments_spawned:0,assembly_progress:0})),breakout_paddle={x:64,target_x:64,width:settings.pongPaddleWidth,speed:3};
+const digit_offset_x=Array(5).fill(0) as number[],digit_offset_y=Array(5).fill(0) as number[],digit_velocity_x=Array(5).fill(0) as number[],digit_velocity=Array(5).fill(0) as number[],ball_stuck_to_paddle=[false,false],ball_stick_release_time=[0,0],ball_stuck_x_offset=[0,0];let paddle_last_x=64;

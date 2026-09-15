@@ -1,0 +1,8 @@
+{
+  "frames": 36000,
+  "scenarios": 12,
+  "maxPositionError": 4.990234714341568e-8,
+  "scope": "Native gameplay state and occupied rows; not full pixel parity",
+  "digitFrames": 43200,
+  "digitScenarios": 24
+}

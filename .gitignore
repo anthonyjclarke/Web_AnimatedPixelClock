@@ -36,3 +36,7 @@ next-env.d.ts
 /.wrangler/
 /outputs/
 /work/
+
+# TypeScript build cache and packaged releases
+*.tsbuildinfo
+/releases/

@@ -1,0 +1,12 @@
+{
+  "ambient.cpp": "a6b1c2adfa094c79027ad3b6cb60f6487d86333990107c316232339e27113fcc",
+  "ambient_invaders.cpp": "8e6968085b1b2e936dacb3c34a9b92879b47a32911da7e12d422a3455ae272a1",
+  "ambient_pacman_chase.cpp": "389546faa0dda1cde3a04261feea82138d07c234d14c2def04093230ad16ad21",
+  "ambient_stars.cpp": "36e9ad34402d4ca68cb5fbbb3c54fb47e51d8d149227bdffdcd76d0cc86f2a7c",
+  "ambient_aquarium.cpp": "954e21e67fc744c0d7b5548a3e1bdafa17d134aa1fe0fa0800488ea756c9958b",
+  "ambient_thisisfine.cpp": "095c111a16a2f400d6e5999c5ece798d93c130de5deff912d6a33d4067b09dfa",
+  "ambient_custom.cpp": "65531b7e76319a00161e38e180e8eedf614cab57e693a0dd6f6fc0ef58304ed0",
+  "anim_store.cpp": "571c2a8512d9fe8efa00a9a5d9718659d4b15521c4f5a5ea32d9e24fc7eaedd2",
+  "anim_store.h": "878683bb3a0126ba8d5aab2dab4c29d409597492da367dc3fe5eea58df2fb714",
+  "thisisfine_frames.h": "7c0f1b5e8c072182c191d0307ed6272163361457a192b183341f511eb497e42b"
+}

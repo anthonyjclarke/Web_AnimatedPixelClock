@@ -1,0 +1,78 @@
+{
+  "method": "Mock Canvas drawing checks; source review required for fidelity. Unchanged digits at 56 are only a parity failure for firmware modes triggered at 56.",
+  "totalFrames": 1680,
+  "results": [
+    {
+      "style": "Mario",
+      "frames": 140,
+      "finiteDrawingPassed": true,
+      "digitsUnchangedAt56And59": true
+    },
+    {
+      "style": "Pac-Man",
+      "frames": 140,
+      "finiteDrawingPassed": true,
+      "digitsUnchangedAt56And59": true
+    },
+    {
+      "style": "Snake",
+      "frames": 140,
+      "finiteDrawingPassed": true,
+      "digitsUnchangedAt56And59": true
+    },
+    {
+      "style": "Space Invaders",
+      "frames": 140,
+      "finiteDrawingPassed": true,
+      "digitsUnchangedAt56And59": true
+    },
+    {
+      "style": "Asteroids",
+      "frames": 140,
+      "finiteDrawingPassed": true,
+      "digitsUnchangedAt56And59": true
+    },
+    {
+      "style": "Dino Runner",
+      "frames": 140,
+      "finiteDrawingPassed": true,
+      "digitsUnchangedAt56And59": true
+    },
+    {
+      "style": "Matrix Rain",
+      "frames": 140,
+      "finiteDrawingPassed": true,
+      "digitsUnchangedAt56And59": true
+    },
+    {
+      "style": "TRON",
+      "frames": 140,
+      "finiteDrawingPassed": true,
+      "digitsUnchangedAt56And59": true
+    },
+    {
+      "style": "Bomberman",
+      "frames": 140,
+      "finiteDrawingPassed": true,
+      "digitsUnchangedAt56And59": true
+    },
+    {
+      "style": "Pong",
+      "frames": 140,
+      "finiteDrawingPassed": true,
+      "digitsUnchangedAt56And59": true
+    },
+    {
+      "style": "Standard",
+      "frames": 140,
+      "finiteDrawingPassed": true,
+      "digitsUnchangedAt56And59": true
+    },
+    {
+      "style": "Large",
+      "frames": 140,
+      "finiteDrawingPassed": true,
+      "digitsUnchangedAt56And59": true
+    }
+  ]
+}

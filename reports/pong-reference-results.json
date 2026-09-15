@@ -1,0 +1,6 @@
+{
+  "ticks": 24000,
+  "maxError": 0.0000019901263730091705,
+  "scenarios": 12,
+  "scope": "Original native display/update with drawing stubbed vs web: paddle X, both ball fixed-point positions/velocities/active/state, digit transition states/hits and spring offsets. Speeds16/18/30 × shatter/horizontal on/off. Seed1, forced late-minute rollover to exercise multiball."
+}

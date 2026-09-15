@@ -1,0 +1,5 @@
+{
+  "src/clocks/clock_pacman.cpp": "d9b57316886d62decbf0fc53b17368b0cd7db0e3784926ebd9532d51be706b6c",
+  "src/clocks/clock_mario.cpp": "4476b161dcb1f36861fde5b4e24b032741938656d8bdf98ddc5b7405e1053075",
+  "src/config/settings.cpp": "5669eca4607efdae07276f3426241e45ceca00c7f4833bdc75d89e800d2cc09f"
+}

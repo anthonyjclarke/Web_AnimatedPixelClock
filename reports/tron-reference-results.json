@@ -1,0 +1,5 @@
+{
+  "ticks": 6000,
+  "maxError": 4.6044921475640876e-7,
+  "scope": "Native helpers: phases, active digit, builder selection, builder position/direction, built segments/trace index, shown digits and both bikes position/direction/trail count/death/step/crash timestamps. Seed 1, four-digit rollover and continued duel; full framebuffer not compared."
+}

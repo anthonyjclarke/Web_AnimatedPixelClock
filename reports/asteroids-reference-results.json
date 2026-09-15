@@ -1,0 +1,5 @@
+{
+  "ticks": 9600,
+  "maxError": 0.00196623639901361,
+  "scope": "Phase, displayed digits, ship position/velocity/heading/thrust, current digit, bullet active flag, rock active/size/position. Default speeds, all date/transparency combinations; host native float versus JavaScript double; 0.02 tolerance. Bounce, full frames and other settings not native-compared."
+}

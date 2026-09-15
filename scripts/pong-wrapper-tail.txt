@@ -1,0 +1,17 @@
+return {
+ setDisplayed(live:string){displayed=live;},
+ configure(value?:PongSettings){settings=normalizePong(value);breakout_paddle.width=settings.pongPaddleWidth;},
+ get state(){return {now,displayed,balls:pong_balls,paddle:breakout_paddle,transitions:digit_transitions,fragments:pong_fragments,targets:fragment_targets,offsetX:digit_offset_x,offsetY:digit_offset_y};},
+ tick(live:string,seconds:number,replay=false){now+=16;if(!initialized){displayed=live;spawnPongBall(0);pong_balls[0].state=PONG_BALL_SPAWNING;pong_balls[0].spawn_timer=now;initialized=true;if(!replay)return;}
+ for(const i of [0,1,3,4])if(replay||displayed[i]!==live[i])triggerDigitTransition(i,displayed.charCodeAt(i),live.charCodeAt(i));displayed=live;
+ const breaking=digit_transitions.findIndex(d=>d.state===DIGIT_BREAKING);
+ if(breaking>=0&&seconds>=55){if(!pong_balls[1].active)spawnPongBall(1);breakout_paddle.target_x=DIGIT_X[breaking]+7;for(const b of pong_balls)if(b.active&&b.state===PONG_BALL_NORMAL){b.vx=b.vx>0?22:-22;b.vy=b.vy>0?22:-22;}}
+ else{pong_balls[1].active=false;const b=pong_balls[0];if(b.active&&b.state===PONG_BALL_NORMAL){b.vx=b.vx>0?tickSpeed():-tickSpeed();b.vy=b.vy>0?tickSpeed():-tickSpeed();}}
+ for(let i=0;i<2;i++)if(pong_balls[i].active){updatePongBall(i);checkPongCollisions(i);}updateBreakoutPaddle();updateDigitTransitions();updatePongFragments();updateAssemblyFragments();updateDigitBouncePong();
+ },
+ draw(frame:Framebuffer,date:Date,o:{color:string;zone:string;blink:boolean;hour24:boolean;dateFormat?:number},pm:boolean){frame.clear('#000000');drawGfxText(frame,classicDate(date,o.zone,o.dateFormat??0),34,4,1,'#ffffff');if(!o.hour24)drawGfxText(frame,pm?'PM':'AM',110,4,1,'#ffffff');
+ for(let i=0;i<5;i++){const d=digit_transitions[i];let ch=displayed[i];if(d.state===DIGIT_BREAKING){if(d.hit_count>0&&Math.floor(now/(100-d.hit_count*20))%2===0)continue;ch=String.fromCharCode(d.old_char);}else if(d.state===DIGIT_ASSEMBLING){if(d.assembly_progress<.8)continue;ch=String.fromCharCode(d.new_char);}if(i===2&&o.blink&&date.getMilliseconds()>=500)ch=' ';drawGfxText(frame,ch,DIGIT_X[i]+Math.trunc(digit_offset_x[i]),16+Math.trunc(digit_offset_y[i]),3,o.color);}
+ for(const p of pong_fragments)if(p.active)frame.rect(Math.trunc(p.x),Math.trunc(p.y),2,2,o.color);frame.rect(breakout_paddle.x-Math.trunc(breakout_paddle.width/2),60,breakout_paddle.width,2,'#00ffff');for(const b of pong_balls)if(b.active&&(b.state!==PONG_BALL_SPAWNING||Math.floor(now/100)%2===0))frame.rect(Math.trunc(b.x/16),Math.trunc(b.y/16),2,2,'#ffffff');
+ }
+};
+}

@@ -1,16 +1,18 @@
 {
-  "name": "sites-project",
+  "name": "web-animated-pixel-clock",
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": ">=22.13.0"
+    "node": ">=22.18.0"
   },
   "scripts": {
-    "dev": "vinext dev",
+    "dev": "vinext dev --hostname 127.0.0.1",
     "build": "vinext build",
-    "start": "wrangler dev --config dist/server/wrangler.json",
+    "start": "node scripts/serve.mjs",
     "lint": "oxlint",
-    "format": "oxfmt"
+    "format": "oxfmt",
+    "test": "node scripts/test.mjs",
+    "typecheck": "tsc --noEmit --incremental false"
   },
   "dependencies": {
     "react": "19.2.6",
@@ -51,5 +53,16 @@
     "vite": "8.0.13",
     "wrangler": "4.92.0"
   },
-  "type": "module"
+  "type": "module",
+  "description": "Browser adaptation of Keralots AnimatedPixelClock with arcade clocks, ambient scenes and audio visualizers.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anthonyjclarke/Web_AnimatedPixelClock.git"
+  },
+  "homepage": "https://github.com/anthonyjclarke/Web_AnimatedPixelClock#readme",
+  "bugs": {
+    "url": "https://github.com/anthonyjclarke/Web_AnimatedPixelClock/issues"
+  },
+  "packageManager": "pnpm@10.11.0"
 }

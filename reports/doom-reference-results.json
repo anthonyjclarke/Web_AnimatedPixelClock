@@ -1,0 +1,6 @@
+{
+  "frames": 4320,
+  "scenarios": 36,
+  "heatCellsCompared": 35389440,
+  "scope": "Exact heat-buffer comparison against upstream spread/stamp functions. All winds, smooth and burning digits on/off, digit heights8/20/40, ground13/40 and date layout. Does not compare rendered palette/text or digit transition timing."
+}

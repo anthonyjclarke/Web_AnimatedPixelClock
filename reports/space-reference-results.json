@@ -1,0 +1,8 @@
+{
+  "frames": 57600,
+  "scenarios": 24,
+  "maxPositionError": 0.000022934277339459186,
+  "spriteFrames": 100,
+  "spritePixelDifferences": 0,
+  "scope": "Native animation state/fragment trajectories and character rasterization; full scene parity not claimed"
+}

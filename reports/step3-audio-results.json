@@ -1,0 +1,8 @@
+{
+  "blocks": 32,
+  "bandBytes": 1024,
+  "waveBytes": 4096,
+  "maxBandError": 0,
+  "maxWaveError": 1,
+  "sourceSha256": "80791e650ae059891d7fef96c3781a3282e6bfcd7af8b6dfed53b44ceba5e104"
+}

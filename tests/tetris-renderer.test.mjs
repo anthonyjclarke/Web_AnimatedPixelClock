@@ -1,13 +1,10 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
-import ts from 'typescript';
-const moduleURL=source=>'data:text/javascript;base64,'+Buffer.from(ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText).toString('base64');
-const tetrisURL=moduleURL(readFileSync(new URL('../app/tetris.ts',import.meta.url),'utf8'));
-const {renderClock,resetTetris}=await import(moduleURL(readFileSync(new URL('../app/renderer.ts',import.meta.url),'utf8').replace("'./tetris'",JSON.stringify(tetrisURL))));
+import {importTS} from './load-module.mjs';
+const {renderClockFrame,resetTetris}=await importTS(new URL('../app/renderer.ts',import.meta.url));
 const options={style:'Tetris',brightness:85,hour24:true,date:true,blink:false,glow:true,zone:'UTC',color:'#64e6ac',motion:true};
-function canvas(){const context={fillStyle:'',calls:[],fillRect(...args){assert.ok(args.every(Number.isFinite));this.calls.push([this.fillStyle,...args]);}};return {width:1024,height:512,getContext(){return context;},context};}
-function frame(c,t,o=options){c.context.calls=[];renderClock(c,o,t,new Date('2026-09-09T12:34:20Z'));return c.context.calls;}
+function canvas(){return {};}
+function frame(c,t,o=options){return Array.from(renderClockFrame(c,o,t,new Date('2026-09-09T12:34:20Z')).pixels,value=>['#'+value.toString(16).padStart(6,'0')]);}
 test('ordinary entry shows settled digits; explicit replay rebuilds them',()=>{
  const c=canvas();const initial=frame(c,0);assert.ok(initial.filter(r=>r[0]===options.color).length>200);
  resetTetris(c,true);const replay=frame(c,0);assert.ok(replay.filter(r=>r[0]===options.color).length<initial.filter(r=>r[0]===options.color).length);

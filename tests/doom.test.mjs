@@ -1,0 +1,8 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {importTS} from './load-module.mjs';
+const {Doom,doomDefaults,normalizeDoom}=await importTS(new URL('../app/doom.ts',import.meta.url));
+const {renderClockFrame,resetClock,styles}=await importTS(new URL('../app/renderer.ts',import.meta.url));
+test('Doom settings persist, clamp and derive legacy ground height',()=>{assert.deepEqual(normalizeDoom(JSON.parse(JSON.stringify(doomDefaults))),doomDefaults);assert.equal(normalizeDoom({doomFlameHeight:30}).doomGroundHeight,20);assert.equal(normalizeDoom({doomWind:99,ember:'bad'}).doomWind,2);assert.equal(normalizeDoom({ember:'bad'}).ember,doomDefaults.ember);assert.ok(styles.includes('Doom Fire'));});
+test('Doom changed digits burn then reignite while colon stays steady',()=>{const g=new Doom();g.displayed='23:59';g.tick('23:59','00:00',100,56,true);assert.deepEqual(g.states,[1,1,0,1,1]);let ignite=false;for(let i=0;i<100;i++){g.tick('23:59','00:00',100,56,true);ignite||=g.states.includes(2);}assert.ok(ignite);assert.equal(g.displayed,'00:00');assert.ok(g.states.every(s=>s===0));});
+test('Doom pause is stable, palette edits apply and replay runs',()=>{const c={},d=new Date('2026-09-15T12:34:20Z'),o={style:'Doom Fire',hour24:true,date:false,blink:false,color:'#64e6ac',zone:'UTC',motion:true,brightness:100,glow:false},draw=(t,opts=o)=>renderClockFrame(c,opts,t,d).pixels.slice();draw(0);for(let i=1;i<60;i++)draw(i/60);const paused=draw(1,{...o,motion:false});assert.deepEqual(draw(3,{...o,motion:false}),paused);assert.notDeepEqual(draw(3,{...o,motion:false,doom:{...doomDefaults,flame:'#0000ff'}}),paused);resetClock(c,true);draw(0);draw(.016);assert.notDeepEqual(draw(.032),paused);});

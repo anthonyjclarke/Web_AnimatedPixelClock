@@ -1,0 +1,6 @@
+{
+  "ticks": 54000,
+  "maxError": 0.0003719332490234317,
+  "scenarios": 18,
+  "scope": "Original C++ update and shared bounce equations vs web: phases, digits, jump, legs, ground, pterodactyl, cacti, clouds, digit offsets/velocities, all dust state. Speeds 5/12/30, frequencies 0/1/2, date off/on. Full framebuffer not compared."
+}

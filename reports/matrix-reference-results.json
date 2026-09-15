@@ -1,0 +1,6 @@
+{
+  "ticks": 18000,
+  "maxError": 0.00004294184570241555,
+  "scenarios": 9,
+  "scope": "Original C++ update vs web: displayed time, all decode flags/timers/glyphs, every column active/head/speed/trail/respawn and all 168 rain glyphs. Speeds 5/12/30, densities 0/1/2. Full framebuffer not compared."
+}

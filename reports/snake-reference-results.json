@@ -1,0 +1,6 @@
+{
+  "scenarios": 24,
+  "frames": 84000,
+  "stateDifferences": 0,
+  "scope": "Native phases, displayed digits, direction, target length, food, body and digit pellets; bounce/display stubbed"
+}

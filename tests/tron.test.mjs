@@ -1,0 +1,12 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {importTS} from './load-module.mjs';
+const {Tron,normalizeTron,drawTronBike}=await importTS(new URL('../app/tron.ts',import.meta.url));
+const {Framebuffer}=await importTS(new URL('../app/framebuffer.ts',import.meta.url));
+const {renderClockFrame,resetClock}=await importTS(new URL('../app/renderer.ts',import.meta.url));
+const seed=()=>{let n=1;return()=>{n=(Math.imul(n,1664525)+1013904223)>>>0;return n/4294967296;};};
+test('TRON validates its native motorcycle variant',()=>{assert.deepEqual(normalizeTron({tronBikeStyle:1}),{tronBikeStyle:1});for(const value of [null,{}, {tronBikeStyle:'1'},{tronBikeStyle:9}])assert.deepEqual(normalizeTron(value),{tronBikeStyle:0});});
+test('TRON duels outside digit walls and bounds its trails',()=>{const g=new Tron(seed());let crashed=false;for(let i=0;i<4000;i++){g.tick('12:34');for(const b of g.bikes){assert.ok(b.trail.length<=96);if(!b.dead)assert.equal(g.blocked(b.x,b.y),false);crashed||=b.dead;}}assert.ok(crashed);});
+test('TRON continuously traces all changed digits then returns to duel',()=>{const g=new Tron(seed());g.tick('23:59');const phases=new Set();for(let i=0;i<3000;i++){g.tick('00:00');phases.add(g.phase);}assert.deepEqual(g.shown,[0,0,0,0]);for(const p of ['erase','approach','trace','return','duel'])assert.ok(phases.has(p));});
+test('TRON both bike variants rotate within panel edges',()=>{const frames=[];for(const style of [0,1]){const f=new Framebuffer();f.clear('#000000');for(let d=0;d<4;d++)drawTronBike(f,d%2?127:0,d<2?0:63,d,0x05ff,style);assert.ok(f.pixels.some(p=>p!==0));frames.push(f.pixels.slice());}assert.notDeepEqual(frames[0],frames[1]);});
+test('TRON pause, variant edits and replay preserve clock rendering',()=>{const c={},date=new Date('2026-09-14T12:34:20Z'),o={style:'TRON',hour24:true,date:false,blink:false,color:'#64e6ac',zone:'UTC',motion:true,brightness:100,glow:false},draw=(t,opts=o)=>renderClockFrame(c,opts,t,date).pixels.slice();draw(0);for(let i=1;i<30;i++)draw(i/60);const paused=draw(.5,{...o,motion:false});assert.deepEqual(draw(3,{...o,motion:false}),paused);assert.notDeepEqual(draw(3,{...o,motion:false,tron:{tronBikeStyle:1}}),paused);resetClock(c,true);draw(0);for(let i=1;i<60;i++)draw(i/60);assert.notDeepEqual(draw(1),paused);});
