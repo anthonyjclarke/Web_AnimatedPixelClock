@@ -23,3 +23,7 @@ Timezone selection, canvas glow/scaling, fullscreen, animation pause/replay, aut
 ## Ambient browser conveniences
 
 The six ambient selections themselves come from the original firmware. Browser adaptations: one local PCA file is kept in IndexedDB instead of a device flash library; Stop suppresses the current scheduled window until it ends or the page reloads. Original auto-mode can immediately resume an active schedule. Pause/Replay also work on ambient scenes. These are browser conveniences, not new upstream animations. Configurable rotation already exists upstream; this web version currently exposes one shared interval rather than the original per-style order/durations.
+
+## Code EQ alongside Waterfall
+
+[NickoScope's fork](https://github.com/NickoScope/AnimatedPixelClock) replaces Waterfall at visualizer ID 2 in selected hardware builds. This browser adaptation retains Waterfall and adds Code EQ at ID 15. IDs 7–14 remain reserved for possible ports of the fork's other effects. A browser Beat glitch switch can disable the reference effect's 100 ms beat flash; the default remains enabled. The Matrix clock's compact font setting does not affect Code EQ's reference 5 × 7 glyphs.

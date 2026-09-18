@@ -94,7 +94,7 @@ export default function Home() {
   const [ambient, setAmbient] = useState(ambientDefaults),
     [forcedAmbient, setForcedAmbient] = useState(false),
     [skipWindow, setSkipWindow] = useState(false),
-    [cycleSeconds, setCycleSeconds] = useState(20);
+    [cycleSeconds, setCycleSeconds] = useState(30);
   const [custom, setCustom] = useState<PcaAnimation | null>(null),
     [customName, setCustomName] = useState(''),
     [fine, setFine] = useState<PcaAnimation | null>(null),
@@ -557,30 +557,22 @@ export default function Home() {
                   />
                 </div>
                 <div className="setting-row">
-                  <label htmlFor="cycle-seconds">
-                    Cycle interval (seconds)
-                  </label>
-                  <input
+                  <label htmlFor="cycle-seconds">Cycle interval</label>
+                  <select
                     id="cycle-seconds"
                     className="cycle-seconds"
-                    type="number"
-                    min={5}
-                    max={3600}
-                    key={cycleSeconds}
-                    defaultValue={cycleSeconds}
-                    onBlur={(e) => {
-                      const next = normalizeCycleSeconds(
-                        e.target.value === ''
-                          ? undefined
-                          : Number(e.target.value),
-                      );
-                      e.target.value = String(next);
-                      setCycleSeconds(next);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') e.currentTarget.blur();
-                    }}
-                  />
+                    value={cycleSeconds}
+                    onChange={(e) =>
+                      setCycleSeconds(
+                        normalizeCycleSeconds(Number(e.target.value)),
+                      )
+                    }
+                  >
+                    <option value={30}>30s</option>
+                    <option value={60}>1m</option>
+                    <option value={300}>5m</option>
+                    <option value={900}>15m</option>
+                  </select>
                 </div>
                 <div className="brightness">
                   <label id="brightness">
@@ -819,6 +811,14 @@ export default function Home() {
               rel="noopener noreferrer"
             >
               AnimatedPixelClock by Keralots
+            </a>
+            {' · '}
+            <a
+              href="https://github.com/anthonyjclarke/Web_AnimatedPixelClock"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Web edition on GitHub
             </a>
           </span>
           <span>

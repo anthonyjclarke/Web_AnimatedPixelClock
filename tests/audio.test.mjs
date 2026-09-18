@@ -40,8 +40,8 @@ test('waveform begins at the first available rising crossing after decimation',(
 test('deterministic demo yields actual normalized packets',()=>{
  assert.deepEqual(demoBlock(42),demoBlock(42));const packet=new AudioSpectrum().process(demoBlock(42));assert.equal(packet.length,164);assert.ok(packet.slice(4,36).some(v=>v>0));
 });
-test('effect IDs preserve firmware gap and all six effects are selectable',()=>{
- assert.deepEqual(effects.map(e=>e.id),[0,1,2,3,5,6]);assert.deepEqual(effects.filter(e=>e.available).map(e=>e.id),[0,1,2,3,5,6]);
+test('effect IDs preserve firmware gap and all seven effects are selectable',()=>{
+ assert.deepEqual(effects.map(e=>e.id),[0,1,2,3,5,6,15]);assert.deepEqual(effects.filter(e=>e.available).map(e=>e.id),[0,1,2,3,5,6,15]);
 });
 test('all available visualizers render audio, silence and a cached corner clock',()=>{
  const clock={zone:'UTC',hour24:true,blink:false};

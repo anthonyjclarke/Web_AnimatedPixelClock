@@ -56,13 +56,18 @@ test('saved ambient and rotation controls normalize safely', () => {
     false,
   );
   for (const [v, expected] of [
-    [undefined, 20],
-    [NaN, 20],
-    [Infinity, 20],
-    [0, 5],
-    [4500, 3600],
-    [35.6, 36],
-    [90, 90],
+    [undefined, 30],
+    [NaN, 30],
+    [Infinity, 30],
+    [0, 30],
+    [20, 30],
+    [4500, 30],
+    [35.6, 30],
+    [90, 30],
+    [30, 30],
+    [60, 60],
+    [300, 300],
+    [900, 900],
   ])
     assert.equal(normalizeCycleSeconds(v), expected);
 });

@@ -1,3 +1,5 @@
+import {AudioFrameDeriver} from './audio-analysis';
+import {CodeEq} from './code-eq';
 import {Oscilloscope,scopeDefaults,type ScopeOptions} from './oscilloscope';
 import {Starfield} from './starfield';
 import {AudioFrameStore,type EffectId} from './audio-frame';
@@ -5,8 +7,8 @@ import {Framebuffer} from './framebuffer';
 import {CachedWallTime} from './frame-time';
 import {gfxFont} from './character-clocks';
 import {timeParts,type Options} from './renderer';
-export type VizOptions={effect:EffectId;low:string;mid:string;peak:string;showClock:boolean;scope:ScopeOptions};
-export const vizDefaults:VizOptions={effect:0,low:'#00ff00',mid:'#ffff00',peak:'#ff0000',showClock:true,scope:scopeDefaults};
+export type VizOptions={effect:EffectId;low:string;mid:string;peak:string;showClock:boolean;codeEqGlitch?:boolean;scope:ScopeOptions};
+export const vizDefaults:VizOptions={effect:0,low:'#00ff00',mid:'#ffff00',peak:'#ff0000',showClock:true,codeEqGlitch:true,scope:scopeDefaults};
 // Quantize through the firmware RGB565 conversion before drawing RGB pixels.
 const color=(r:number,g:number,b:number)=>{
   const rr=Math.trunc(r)&248,gg=Math.trunc(g)&252,bb=Math.trunc(b)&248;
@@ -18,6 +20,9 @@ function text(frame:Framebuffer,s:string,x:number,y:number){
 }
 // Firmware effect IDs are explicit; ID 4 is intentionally absent.
 export class Visualizer {
+  private codeEq=new CodeEq();
+  private analysis=new AudioFrameDeriver();
+  private audioSerial=0; private audioAt:number|null=null; private audioStore:AudioFrameStore|null=null;
   private scope=new Oscilloscope();
  private stars=new Starfield();
  private heights=new Float64Array(32);
@@ -83,6 +88,19 @@ export class Visualizer {
           frame.rect(x-1,y,4,1,color(Math.trunc(r/4),Math.trunc(g/4),Math.trunc(b/4)));frame.rect(x,y-1,1,4,color(Math.trunc(r/4),Math.trunc(g/4),Math.trunc(b/4)));frame.rect(x,y,2,2,color(r,g,b));
         }
       }
+    }
+    if(o.effect===15){
+      if(reset||this.audioStore!==store){this.codeEq=new CodeEq();this.analysis=new AudioFrameDeriver();this.audioSerial=0;this.audioAt=null;this.audioStore=store;}
+      // The store retains a bounded packet history so slow renders do not lose beats.
+      for(const packet of store.framesAfter(this.audioSerial)){
+        this.audioSerial=packet.serial;
+        if(now-packet.receivedAt>2000)continue;
+        const interval=this.audioAt===null?.04:(packet.receivedAt-this.audioAt)/1000;
+        this.audioAt=packet.receivedAt;
+        this.codeEq.update(this.analysis.feed(packet.bands,interval),o.codeEqGlitch!==false);
+      }
+      if(stale)this.codeEq.update(this.analysis.feed(new Uint8Array(32),dt),false);
+      this.codeEq.draw(frame,dt);
     }
     if(o.effect===6){this.scope.draw(frame,store.frame?.waveform??null,store.frame?.waveSerial??0,stale,reset,o.showClock,o.scope);if(!stale&&!store.frame?.waveform)text(frame,'NO WAVE',43,28);}
     if(o.effect===5)this.stars.draw(frame,Float64Array.from(this.heights,v=>v/56),store.frame?.bands??new Uint8Array(32),store.frame?.serial??0,dt,reset,o.showClock);

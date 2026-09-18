@@ -25,7 +25,9 @@ const bounded = (v: unknown, fallback: number, min: number, max: number) =>
   typeof v === 'number' && Number.isFinite(v)
     ? Math.max(min, Math.min(max, Math.round(v)))
     : fallback;
-export const normalizeCycleSeconds = (v: unknown) => bounded(v, 20, 5, 3600);
+// Older arbitrary intervals fall back to the new 30-second default.
+export const normalizeCycleSeconds = (v: unknown) =>
+  typeof v === 'number' && [30, 60, 300, 900].includes(v) ? v : 30;
 export function normalizeAmbient(value: unknown): AmbientSettings {
   const v = (
     value && typeof value === 'object' ? value : {}

@@ -1,5 +1,18 @@
 # Web project changelog
 
+## Unreleased — development snapshot, 18 September 2026
+
+- Added Code EQ (Matrix) as a seventh audio visualizer, adapted from NickoScope/AnimatedPixelClock commit 85c9be92. Preserved Waterfall at ID 2; Code EQ uses ID 15.
+- Added reusable packet-rate smoothing, held peaks and bass-flux beat detection, plus bounded audio history so slow display frames do not lose beats.
+- Added a Beat glitch toggle, visible author/repository/source links, third-party attribution, and reference comparisons (300 exact Python render frames and 160 native C++ analysis frames).
+- Replaced the cycle interval number field with 30s, 1m, 5m and 15m choices. Unsupported saved intervals reset to 30s; the selection remains saved between visits.
+- Added the web repository link alongside the Keralots footer attribution.
+- Updated macOS/Windows launchers to open the default browser at the actual server address and filter only the known Vite/Node 26 DEP0205 notice.
+- Reconciled current documentation, cycle-control guidance and NickoScope attribution. Historical release records retain their original counts.
+- Validation: 123 tests, TypeScript and production build pass. No new interactive browser/audio-device or Windows acceptance is claimed.
+
+These changes are a branch snapshot, not a new tagged release or deployment.
+
 ## [0.1.0] — 2026-09-15
 
 Initial public web release: 14 clock styles, six audio visualizers, five built-in ambient scenes and custom PCA playback. Includes saved clock/ambient settings, configurable cycling, macOS/Windows launchers, a dependency-free production server and a cross-platform CI workflow. Original behavior and web-only extras are documented separately.

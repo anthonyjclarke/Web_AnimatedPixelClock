@@ -8,6 +8,8 @@ export const effects = [
   {id:3,name:'Purple LED Stage',available:true},
   {id:5,name:'Starfield Overdrive',available:true},
   {id:6,name:'Oscilloscope',available:true},
+  // 7–14 reserved for NickoScope's other effects; preserve Waterfall at 2.
+  {id:15,name:'Code EQ (Matrix)',available:true},
 ] as const;
 export type EffectId = typeof effects[number]['id'];
 export interface AudioFrame {
@@ -19,15 +21,18 @@ export interface AudioFrame {
 }
 export class AudioFrameStore {
   frame: AudioFrame | null = null;
+  private history:AudioFrame[]=[];
+  framesAfter(serial:number){return this.history.filter(frame=>frame.serial>serial);}
   private forcedAt: number | null = null;
   private serial = 0;
   private waveSerial = 0;
   force(now:number){this.forcedAt=now;}
-  clear(){this.frame=null;this.forcedAt=null;}
+  clear(){this.frame=null;this.forcedAt=null;this.history=[];}
   ingest(packet:Uint8Array,now:number):boolean {
     if(!Number.isFinite(now)||packet.length<36||packet[0]!==70||packet[1]!==70||packet[2]!==84||packet[3]!==49)return false;
     const waveform=packet.length>=164?packet.slice(36,164):null;
     this.frame={bands:packet.slice(4,36),waveform,serial:++this.serial,waveSerial:waveform?++this.waveSerial:this.waveSerial,receivedAt:now};
+    this.history.push(this.frame);if(this.history.length>128)this.history.shift();
     return true;
   }
   // requestAnimationFrame timestamps can precede packets delivered before the

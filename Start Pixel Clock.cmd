@@ -12,7 +12,11 @@ if not exist node_modules (
   pause
   exit /b 1
 )
-echo Starting Pixel Clock at http://127.0.0.1:3000/
+echo Starting Pixel Clock - your browser will open automatically.
+echo If it does not open, use the Local URL printed below.
 echo Leave this window open. Press Ctrl+C to stop the server.
+set "PIXEL_CLOCK_OPEN_BROWSER=1"
+rem Filter the known Vite 8 / Node 26 compatibility notice only.
+set "NODE_OPTIONS=%NODE_OPTIONS% --disable-warning=DEP0205"
 call npm run dev
 pause

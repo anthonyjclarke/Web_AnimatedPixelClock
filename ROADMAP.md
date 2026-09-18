@@ -4,24 +4,22 @@ Initial web release v0.1.0 — 15 September 2026. Target: faithful ESP32 v2.3 cl
 
 ## Current status
 
-All 14 listed clock styles and six visualizers are implemented. **No listed arcade ports remain; Weather and other original functions are still missing.** Current regression suite: **117 passing tests** (15 September 2026); latest TypeScript and production build checks pass. Full visual/pixel acceptance is still open. See [documentation index](reports/README.md).
+All 14 listed clock styles and seven visualizers are implemented. **No listed arcade ports remain; Weather and other original functions are still missing.** Current regression suite: **123 passing tests** (18 September 2026); latest TypeScript and production build checks pass. Full visual/pixel acceptance is still open. See [documentation index](reports/README.md).
 
 ## Delivered
 
 - Initial GitHub release packaging, portable getting-started instructions, dependency-free static server, and Linux/macOS/Windows CI checks.
 
-
 - Ambient screensaver: five original built-in scenes, custom PCA playback with local persistence, manual/scheduled operation and corner clock. See [validation](reports/ambient-validation.md); procedural full-frame parity remains unverified.
-- Configurable saved cycle interval under Display settings (5–3600 seconds).
-- macOS and Windows startup launchers; Windows execution acceptance remains open.
-
+- Configurable saved cycle interval under Display settings (30s, 1m, 5m or 15m).
+- macOS and Windows startup launchers with automatic browser opening and targeted DEP0205 filtering; Windows execution acceptance remains open.
 
 - Doom Fire (upstream style 17), added from current GitHub source: 4,320 exact heat-buffer frames across 36 settings combinations. This was outside the older local source snapshot; it is not a web extra.
 
 - Optional Pac-Man ghost chases (off by default), documented separately in [Web-only extras](WEB-EXTRAS.md).
 
 - Shared framebuffer, timing, cached wall time and audio input pipeline.
-- Six audio visualizers including Oscilloscope and Starfield Overdrive.
+- Seven audio visualizers including Oscilloscope, Starfield Overdrive and Code EQ (Matrix). Code EQ and packet analysis are adapted from [NickoScope](https://github.com/NickoScope/AnimatedPixelClock); see [validation](reports/code-eq-validation.md).
 - Audio display timing fix: newly arrived packets no longer cause a one-frame clock fallback; genuine 10-second timeout behaviour remains. Regression coverage includes the timestamp race.
 - Tetris's 12 settings and animation/game modes, with native state comparisons.
 - Mario's 7 settings and idle encounters; Pac-Man's 6 settings and pellet behavior, with native state comparisons.

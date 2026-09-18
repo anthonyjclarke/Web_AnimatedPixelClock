@@ -1,6 +1,6 @@
 # Firmware reference checks
 
-Updated 14 September 2026. Run commands from the web project root. These optional development comparisons need a separate firmware checkout; normal installation and `npm test` do not. The local firmware is read-only. Python 3, clang++, installed project dependencies and Node.js 22.18+ are required; audio comparison additionally needs NumPy. Reports contain measured scopes, not universal pixel-parity claims. Current web suite: `npm test` (117 passing tests at v0.1.0).
+Updated 18 September 2026. Run commands from the web project root. These optional development comparisons need a separate firmware checkout; normal installation and `npm test` do not. The local firmware is read-only. Python 3, clang++, installed project dependencies and Node.js 22.18+ are required; audio comparison additionally needs NumPy. Reports contain measured scopes, not universal pixel-parity claims. Current web suite: `npm test` (123 passing tests; v0.1.0 had 117).
 
 ## Arcade port harnesses
 
@@ -105,3 +105,14 @@ node tests/reference/doom.mjs
 ```
 
 Checks all 8,192 heat cells in 4,320 frames. See [Doom validation](../../reports/doom-validation.md) for limits.
+
+## Code EQ (NickoScope fork)
+
+Code EQ and audio-analysis fixtures come from [NickoScope/AnimatedPixelClock](https://github.com/NickoScope/AnimatedPixelClock), pinned to `85c9be92a5b33b17c126ab63db6bc2ae7c9cc331`. Use a separate checkout at that commit:
+
+```sh
+python3 tests/reference/code-eq.py /path/to/NickoScope/AnimatedPixelClock
+node --test tests/code-eq.test.mjs
+```
+
+Regeneration needs NumPy, Pillow and a C++17 compiler. Normal tests use the committed fixtures without those dependencies. Checks compare 300 exact Python RGB-frame hashes and 160 native C++ analysis frames (numeric tolerance 0.00001; exact beat decisions). See [validation](../../reports/code-eq-validation.md) and [attribution](../../THIRD-PARTY-NOTICES.md).

@@ -1,4 +1,4 @@
-> **Historical record.** Feature gaps and next steps below describe the state at the original review date. All 13 clock ports and six visualizers are now implemented. See the [current roadmap](../ROADMAP.md) and [documentation index](README.md) for present status.
+> **Historical snapshot.** Feature gaps, test counts and next steps below describe the original implementation date. See the [current roadmap](../ROADMAP.md) and [documentation index](README.md) for current status.
 
 > Final arcade follow-up (14 September 2026): Bomberman and Pong are now ported. See [validation](final-arcade-validation.md). No listed arcade ports remain; visual acceptance and shared configuration work are still pending.
 
@@ -42,21 +42,21 @@ This report supersedes the completeness interpretation of the earlier four-step 
 
 ## Clock-by-clock comparison
 
-| Clock | Current fidelity | Native behavior still missing / unverified |
-|---|---|---|
-| Tetris | Partial port; rotating/falling/locking pieces and digit rebuilding tested | 12 settings; slab mode, date placement, small-clock/tall-well modes and configuration-specific parity. No complete native scene pixel comparison. |
-| Mario | Default walking/jump/digit transition and sprite work implemented | 7 controls; four-frame smooth walking and optional idle encounters, configurable speed and bounce. Full-scene parity including shared bounce/date/colors is not established. |
-| Pac-Man | Default patrol, pellet consumption/regeneration and glyph eating implemented and tested | 6 controls; configurable pellet count/spacing, movement/eating/mouth speeds and bounce. Full-scene parity across settings is not established. |
-| Snake | Approximation | Native grid/body movement, routing and digit transitions; speed, length, arena border and date. See `clock_snake.cpp`. |
-| Space Invaders | Approximation | Native patrol/attack/laser/explosion phases and selectable character; firmware default is ship, while web draws five invaders. See `clock_space.cpp`. |
-| Asteroids | Approximation | Native ship/rock dynamics, aiming, splitting and digit destruction; speed/count/date/transparency. See `clock_asteroids.cpp`. |
-| Dino Runner | Approximation | Native obstacle/jump and digit-courier sequences; speed, cactus cadence, clouds and date. See `clock_dino.cpp`. |
-| Matrix Rain | Approximation | Native rain streams/glyph mutation and digit decoding; speed, density, date and masking/transparency. See `clock_matrix.cpp`. |
-| TRON | Approximation | Native builder phases and minute targets; both bike styles. See `clock_tron.cpp`. |
-| Bomberman | Approximation | Native routed movement, bomb and digit-change phases. No dedicated clock-specific settings in the active config struct; common colors still apply. See `clock_bomberman.cpp`. |
-| Pong | Approximation | Native collision-driven ball/paddles, digit springs and shatter/reassembly; all six controls. See `clock_pong.cpp`. |
-| Standard | Layout mismatch | Original GFX font, positions, date formats and weekday. See `clock_common.cpp:258`. |
-| Large | Layout mismatch | Original GFX font, top time and bottom date/AM-PM. See `clock_common.cpp:334`. |
+| Clock          | Current fidelity                                                                        | Native behavior still missing / unverified                                                                                                                                    |
+| ---            | ---                                                                                     | ---                                                                                                                                                                           |
+| Tetris         | Partial port; rotating/falling/locking pieces and digit rebuilding tested               | 12 settings; slab mode, date placement, small-clock/tall-well modes and configuration-specific parity. No complete native scene pixel comparison.                             |
+| Mario          | Default walking/jump/digit transition and sprite work implemented                       | 7 controls; four-frame smooth walking and optional idle encounters, configurable speed and bounce. Full-scene parity including shared bounce/date/colors is not established.  |
+| Pac-Man        | Default patrol, pellet consumption/regeneration and glyph eating implemented and tested | 6 controls; configurable pellet count/spacing, movement/eating/mouth speeds and bounce. Full-scene parity across settings is not established.                                 |
+| Snake          | Approximation                                                                           | Native grid/body movement, routing and digit transitions; speed, length, arena border and date. See `clock_snake.cpp`.                                                        |
+| Space Invaders | Approximation                                                                           | Native patrol/attack/laser/explosion phases and selectable character; firmware default is ship, while web draws five invaders. See `clock_space.cpp`.                         |
+| Asteroids      | Approximation                                                                           | Native ship/rock dynamics, aiming, splitting and digit destruction; speed/count/date/transparency. See `clock_asteroids.cpp`.                                                 |
+| Dino Runner    | Approximation                                                                           | Native obstacle/jump and digit-courier sequences; speed, cactus cadence, clouds and date. See `clock_dino.cpp`.                                                               |
+| Matrix Rain    | Approximation                                                                           | Native rain streams/glyph mutation and digit decoding; speed, density, date and masking/transparency. See `clock_matrix.cpp`.                                                 |
+| TRON           | Approximation                                                                           | Native builder phases and minute targets; both bike styles. See `clock_tron.cpp`.                                                                                             |
+| Bomberman      | Approximation                                                                           | Native routed movement, bomb and digit-change phases. No dedicated clock-specific settings in the active config struct; common colors still apply. See `clock_bomberman.cpp`. |
+| Pong           | Approximation                                                                           | Native collision-driven ball/paddles, digit springs and shatter/reassembly; all six controls. See `clock_pong.cpp`.                                                           |
+| Standard       | Layout mismatch                                                                         | Original GFX font, positions, date formats and weekday. See `clock_common.cpp:258`.                                                                                           |
+| Large          | Layout mismatch                                                                         | Original GFX font, top time and bottom date/AM-PM. See `clock_common.cpp:334`.                                                                                                |
 
 ## Audio, v2.3 and implementation boundaries
 
@@ -92,59 +92,59 @@ For each clock, completion means settings affect behavior, defaults match firmwa
 
 Defaults below are raw firmware stored values (for example, tenths or enum indices), not display labels. Source descriptions specify units; the JSON inventory records individual native declaration and UI line numbers. These are missing browser controls, even where the browser happens to hardcode an equivalent default.
 
-| Setting | Native default | Native meaning |
-|---|---|---|
-| `tronBikeStyle` | `0` | 0=Motorcycle profile, 1=Light cycle top view |
-| `marioBounceHeight` | `35` | Tenths (40 = 4.0) |
-| `marioBounceSpeed` | `6` | Tenths (6 = 0.6) |
-| `marioSmoothAnimation` | `false` | Enable 4-frame walk cycle (default: false = 2-frame) |
-| `marioWalkSpeed` | `20` | Tenths (20 = 2.0, 25 = 2.5 old/fast) |
-| `marioIdleEncounters` | `false` | Enable idle enemy encounters (default: false) |
-| `marioEncounterFreq` | `1` | 0=Rare(25-35s), 1=Normal(15-25s), 2=Frequent(8-15s) |
-| `marioEncounterSpeed` | `1` | 0=Slow, 1=Normal, 2=Fast (default: 1) |
-| `spaceCharacterType` | `1` | 0=Invader, 1=Ship |
-| `spacePatrolSpeed` | `5` | Tenths (10 = 1.0) |
-| `spaceAttackSpeed` | `25` | Tenths (25 = 2.5) |
-| `spaceLaserSpeed` | `40` | Tenths (40 = 4.0) |
-| `spaceExplosionGravity` | `5` | Tenths (5 = 0.5) |
-| `pongBallSpeed` | `18` | Fixed-point (16 = 1.0) |
-| `pongBounceStrength` | `3` | Tenths (3 = 0.3) |
-| `pongBounceDamping` | `85` | Hundredths (85 = 0.85) |
-| `pongPaddleWidth` | `20` | Pixels (20) |
-| `pongHorizontalBounce` | `true` | Enable horizontal digit bounce on side hits |
-| `pongDigitShatter` | `true` | Shatter/reassemble on digit change (off = blink only) |
-| `pacmanSpeed` | `10` | Tenths (10 = 1.0) |
-| `pacmanEatingSpeed` | `20` | Tenths (20 = 2.0) |
-| `pacmanMouthSpeed` | `10` | Mouth animation speed (10 = 100ms) |
-| `pacmanPelletCount` | `8` | Number of patrol pellets (0-20) |
-| `pacmanPelletRandomSpacing` | `true` | Random or even spacing |
-| `pacmanBounceEnabled` | `true` | Enable digit bounce on eat |
-| `snakeSpeed` | `12` | Step pace, tenths (higher = faster) |
-| `snakeLength` | `8` | Base body length in cells (4-12) |
-| `snakeWallBorder` | `false` | Draw Nokia-style arena frame |
-| `snakeShowDate` | `false` | Show date row (off = snake uses full screen) |
-| `tetrisFallSpeed` | `12` | Slab/dot drop accel, tenths (12 = 1.2) |
-| `tetrisBlockStyle` | `0` | 0=LCD grid (gaps), 1=Solid blocks |
-| `tetrisIdleTumble` | `true` | Show occasional tumbling piece when idle |
-| `tetrisAnimStyle` | `1` | 0=Drop-in slabs, 1=Falling dots build-up |
-| `tetrisShowDate` | `true` | Show the date row (off = cleaner screen) |
-| `tetrisDatePosition` | `1` | 0=Top, 1=Bottom |
-| `tetrisDotSpeed` | `12` | Falling-dot build speed, tenths (12 = 1.2) |
-| `tetrisDotOrder` | `0` | 0=Bottom-up, 1=Random |
-| `tetrisDigitBounce` | `true` | Bounce the new digit after it rebuilds |
-| `tetrisSmoothGame` | `false` | Block Game plays near-perfectly (smart piece pick, avoids holes) |
-| `tetrisSmallClock` | `false` | Small corner clock; frees the panel for a taller block-game well (auto-enables Block game) |
-| `tetrisSmallClockPos` | `1` | 0=Top-left, 1=Top-right |
-| `asteroidsShipSpeed` | `12` | Ship thrust/drift scale, tenths (12 = 1.2) |
-| `asteroidsRockCount` | `2` | Rocks kept in play (1-4) |
-| `asteroidsRockSpeed` | `8` | Rock drift speed, tenths (8 = 0.8) |
-| `asteroidsShowDate` | `false` | Show date row (off = centred clock) |
-| `asteroidsTransparent` | `true` | No mask behind digits, ship flies through (default: true) |
-| `dinoSpeed` | `12` | World scroll speed, tenths (12 = 1.2) |
-| `dinoCactusFreq` | `1` | 0=Rare, 1=Normal, 2=Frequent |
-| `dinoShowClouds` | `true` | Parallax clouds (default: true) |
-| `dinoShowDate` | `false` | Show date row (off = centred clock) |
-| `matrixRainSpeed` | `12` | Rain fall speed, tenths (12 = 1.2) |
-| `matrixRainDensity` | `1` | 0=Sparse, 1=Normal, 2=Dense |
-| `matrixShowDate` | `false` | Show date row (off = centred clock) |
-| `matrixTransparent` | `false` | No mask behind digits, rain falls through (default: false) |
+| Setting                     | Native default | Native meaning                                                                             |
+| ---                         | ---            | ---                                                                                        |
+| `tronBikeStyle`             | `0`            | 0=Motorcycle profile, 1=Light cycle top view                                               |
+| `marioBounceHeight`         | `35`           | Tenths (40 = 4.0)                                                                          |
+| `marioBounceSpeed`          | `6`            | Tenths (6 = 0.6)                                                                           |
+| `marioSmoothAnimation`      | `false`        | Enable 4-frame walk cycle (default: false = 2-frame)                                       |
+| `marioWalkSpeed`            | `20`           | Tenths (20 = 2.0, 25 = 2.5 old/fast)                                                       |
+| `marioIdleEncounters`       | `false`        | Enable idle enemy encounters (default: false)                                              |
+| `marioEncounterFreq`        | `1`            | 0=Rare(25-35s), 1=Normal(15-25s), 2=Frequent(8-15s)                                        |
+| `marioEncounterSpeed`       | `1`            | 0=Slow, 1=Normal, 2=Fast (default: 1)                                                      |
+| `spaceCharacterType`        | `1`            | 0=Invader, 1=Ship                                                                          |
+| `spacePatrolSpeed`          | `5`            | Tenths (10 = 1.0)                                                                          |
+| `spaceAttackSpeed`          | `25`           | Tenths (25 = 2.5)                                                                          |
+| `spaceLaserSpeed`           | `40`           | Tenths (40 = 4.0)                                                                          |
+| `spaceExplosionGravity`     | `5`            | Tenths (5 = 0.5)                                                                           |
+| `pongBallSpeed`             | `18`           | Fixed-point (16 = 1.0)                                                                     |
+| `pongBounceStrength`        | `3`            | Tenths (3 = 0.3)                                                                           |
+| `pongBounceDamping`         | `85`           | Hundredths (85 = 0.85)                                                                     |
+| `pongPaddleWidth`           | `20`           | Pixels (20)                                                                                |
+| `pongHorizontalBounce`      | `true`         | Enable horizontal digit bounce on side hits                                                |
+| `pongDigitShatter`          | `true`         | Shatter/reassemble on digit change (off = blink only)                                      |
+| `pacmanSpeed`               | `10`           | Tenths (10 = 1.0)                                                                          |
+| `pacmanEatingSpeed`         | `20`           | Tenths (20 = 2.0)                                                                          |
+| `pacmanMouthSpeed`          | `10`           | Mouth animation speed (10 = 100ms)                                                         |
+| `pacmanPelletCount`         | `8`            | Number of patrol pellets (0-20)                                                            |
+| `pacmanPelletRandomSpacing` | `true`         | Random or even spacing                                                                     |
+| `pacmanBounceEnabled`       | `true`         | Enable digit bounce on eat                                                                 |
+| `snakeSpeed`                | `12`           | Step pace, tenths (higher = faster)                                                        |
+| `snakeLength`               | `8`            | Base body length in cells (4-12)                                                           |
+| `snakeWallBorder`           | `false`        | Draw Nokia-style arena frame                                                               |
+| `snakeShowDate`             | `false`        | Show date row (off = snake uses full screen)                                               |
+| `tetrisFallSpeed`           | `12`           | Slab/dot drop accel, tenths (12 = 1.2)                                                     |
+| `tetrisBlockStyle`          | `0`            | 0=LCD grid (gaps), 1=Solid blocks                                                          |
+| `tetrisIdleTumble`          | `true`         | Show occasional tumbling piece when idle                                                   |
+| `tetrisAnimStyle`           | `1`            | 0=Drop-in slabs, 1=Falling dots build-up                                                   |
+| `tetrisShowDate`            | `true`         | Show the date row (off = cleaner screen)                                                   |
+| `tetrisDatePosition`        | `1`            | 0=Top, 1=Bottom                                                                            |
+| `tetrisDotSpeed`            | `12`           | Falling-dot build speed, tenths (12 = 1.2)                                                 |
+| `tetrisDotOrder`            | `0`            | 0=Bottom-up, 1=Random                                                                      |
+| `tetrisDigitBounce`         | `true`         | Bounce the new digit after it rebuilds                                                     |
+| `tetrisSmoothGame`          | `false`        | Block Game plays near-perfectly (smart piece pick, avoids holes)                           |
+| `tetrisSmallClock`          | `false`        | Small corner clock; frees the panel for a taller block-game well (auto-enables Block game) |
+| `tetrisSmallClockPos`       | `1`            | 0=Top-left, 1=Top-right                                                                    |
+| `asteroidsShipSpeed`        | `12`           | Ship thrust/drift scale, tenths (12 = 1.2)                                                 |
+| `asteroidsRockCount`        | `2`            | Rocks kept in play (1-4)                                                                   |
+| `asteroidsRockSpeed`        | `8`            | Rock drift speed, tenths (8 = 0.8)                                                         |
+| `asteroidsShowDate`         | `false`        | Show date row (off = centred clock)                                                        |
+| `asteroidsTransparent`      | `true`         | No mask behind digits, ship flies through (default: true)                                  |
+| `dinoSpeed`                 | `12`           | World scroll speed, tenths (12 = 1.2)                                                      |
+| `dinoCactusFreq`            | `1`            | 0=Rare, 1=Normal, 2=Frequent                                                               |
+| `dinoShowClouds`            | `true`         | Parallax clouds (default: true)                                                            |
+| `dinoShowDate`              | `false`        | Show date row (off = centred clock)                                                        |
+| `matrixRainSpeed`           | `12`           | Rain fall speed, tenths (12 = 1.2)                                                         |
+| `matrixRainDensity`         | `1`            | 0=Sparse, 1=Normal, 2=Dense                                                                |
+| `matrixShowDate`            | `false`        | Show date row (off = centred clock)                                                        |
+| `matrixTransparent`         | `false`        | No mask behind digits, rain falls through (default: false)                                 |

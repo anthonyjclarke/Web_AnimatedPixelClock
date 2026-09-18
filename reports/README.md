@@ -1,26 +1,27 @@
 # Documentation and validation index
 
-Current as of 15 September 2026. [Project README](../README.md) describes use and startup; [roadmap](../ROADMAP.md) owns remaining work. All 14 listed clock ports and six visualizers are delivered. The full regression suite passes 117 tests; complete pixel parity/live acceptance is not claimed.
+Current as of 18 September 2026. [Project README](../README.md) describes use and startup; [roadmap](../ROADMAP.md) owns remaining work. All 14 listed clock ports and seven visualizers are delivered. The full regression suite passes 123 tests; complete pixel parity/live acceptance is not claimed.
 
 See [Web-only extras](../WEB-EXTRAS.md) for optional deviations from source, including Pac-Man ghost chases.
 
 ## Implementation records
 
-| Area | Validation record |
-| --- | --- |
-| Tetris and 12 controls | [Tetris](tetris-settings-validation.md) |
-| Mario/Pac-Man controls and encounters | [Characters](character-settings-validation.md) |
-| Standard/Large layouts | [Classic clocks](classic-clocks-validation.md) |
-| Snake | [Snake](snake-validation.md) |
-| Invader/Ship and five controls | [Space](space-validation.md) |
-| Asteroids | [Asteroids](asteroids-validation.md) |
-| Dino Runner | [Dino](dino-validation.md) |
-| Matrix and compact rain font | [Matrix](matrix-validation.md) |
-| Doom Fire | [Doom Fire](doom-validation.md) |
-| TRON | [TRON](tron-validation.md) |
-| Bomberman/Pong | [Final arcade ports](final-arcade-validation.md) |
-| One-frame audio clock flash | [Audio display fix](audio-display-validation.md) |
-| Reference commands | [Harness guide](../tests/reference/README.md) |
+| Area                                  | Validation record                                |
+| ---                                   | ---                                              |
+| Tetris and 12 controls                | [Tetris](tetris-settings-validation.md)          |
+| Mario/Pac-Man controls and encounters | [Characters](character-settings-validation.md)   |
+| Standard/Large layouts                | [Classic clocks](classic-clocks-validation.md)   |
+| Snake                                 | [Snake](snake-validation.md)                     |
+| Invader/Ship and five controls        | [Space](space-validation.md)                     |
+| Asteroids                             | [Asteroids](asteroids-validation.md)             |
+| Dino Runner                           | [Dino](dino-validation.md)                       |
+| Matrix and compact rain font          | [Matrix](matrix-validation.md)                   |
+| Doom Fire                             | [Doom Fire](doom-validation.md)                  |
+| TRON                                  | [TRON](tron-validation.md)                       |
+| Bomberman/Pong                        | [Final arcade ports](final-arcade-validation.md) |
+| One-frame audio clock flash           | [Audio display fix](audio-display-validation.md) |
+| Code EQ and reactive audio            | [Code EQ](code-eq-validation.md)                 |
+| Reference commands                    | [Harness guide](../tests/reference/README.md)    |
 
 Reports record the checks run at their implementation date. Earlier counts are historical, not the current suite total. JSON reference results beside the reports retain their measured scope and tolerances.
 

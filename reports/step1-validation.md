@@ -1,4 +1,4 @@
-> **Historical record.** Feature gaps and next steps below describe the state at the original review date. All 13 clock ports and six visualizers are now implemented. See the [current roadmap](../ROADMAP.md) and [documentation index](README.md) for present status.
+> **Historical snapshot.** Feature gaps, test counts and next steps below describe the original implementation date. See the [current roadmap](../ROADMAP.md) and [documentation index](README.md) for current status.
 
 # Step 1 — Pac-Man and Mario validation
 

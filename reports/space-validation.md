@@ -1,4 +1,4 @@
-> **Implementation snapshot.** Test counts and “next port” statements below refer to the original implementation date. All listed arcade ports are now complete; the current suite passes 101 tests. See the [current roadmap](../ROADMAP.md) and [documentation index](README.md).
+> **Historical snapshot.** Feature gaps, test counts and next steps below describe the original implementation date. See the [current roadmap](../ROADMAP.md) and [documentation index](README.md) for current status.
 
 # Space (Invader / Ship) — 13 September 2026
 
